@@ -123,7 +123,7 @@ public class HttpServer {
     }
     
     public void addAction(IAction action) {
-        actionMap.put(action.getActionNames(), action);
+        actionMap.put("/"+action.getActionNames(), action);
     }
     
     String runAction(Request request) {

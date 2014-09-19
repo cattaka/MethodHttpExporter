@@ -1,0 +1,54 @@
+package ${packageName};
+
+import android.os.Handler;
+
+public class ${className} extends net.cattaka.util.methodhttpexporter.util.HttpServer {
+    ${className} me = this;
+    ${origClassName} orig;
+    static Handler sHandler = new Handler();
+    public ${className}(${origClassName} orig) {
+        this.orig = orig;
+$foreach{methodInfo:methodInfos}
+        addAction(new IAction() {
+            @Override
+            public String[] getParamNames() {
+                return new String[] {
+$foreach{argName:methodInfo.argNames}
+                    "${argName}",$end{}
+                };
+            }
+            @Override
+            public String getActionNames() {
+                return "${methodInfo.methodName}";
+            }
+            @Override
+            public String action(final String... params) {
+                class RunnableImpl implements Runnable {
+                    volatile String result;
+                    @Override
+                    public void run() {
+                        synchronized (this) {
+                            result = me.orig.${methodInfo.methodName}(
+$code{count=0}$foreach{argName:methodInfo.argNames}
+                                $if{count>0}, $end{}params[${count++}]$end{}
+                                        );
+                            this.notify();
+                        }
+                    }
+                }
+                RunnableImpl runnable = new RunnableImpl();
+                synchronized (runnable) {
+                    sHandler.post(runnable);
+                    try {
+                        runnable.wait();
+                    } catch(InterruptedException e) {
+                        // ignore
+                    }
+                }
+                return runnable.result;
+            }
+        });
+$end{}
+    }
+    
+}

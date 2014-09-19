@@ -19,6 +19,9 @@ The methods that wil be executed are always running on UIThread.
 -->
 
 ## Example
+
+(Whole sample code you can get here)[https://github.com/cattaka/MethodHttpExporterSample]
+
 When you have following class. It has a method that shows toast.
 And  it has @ExportMethodHttp annotations.
 ExportMethodHttp generates utility class named **SimpleToastHttpServer**.

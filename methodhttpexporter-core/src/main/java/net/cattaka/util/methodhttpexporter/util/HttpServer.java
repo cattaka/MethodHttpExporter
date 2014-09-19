@@ -17,7 +17,16 @@ public class HttpServer {
     public interface IAction {
         public String getActionNames();
         public String[] getParamNames();
-        public String action(String... params);
+        public ActionResult action(String... params);
+    }
+    public static class ActionResult {
+        int code;
+        String body;
+        public ActionResult(int code, String result) {
+            super();
+            this.code = code;
+            this.body = result;
+        }
     }
     class AcceptThread extends Thread {
         volatile boolean stopFlag = false;
@@ -66,13 +75,13 @@ public class HttpServer {
                 }
                 Request request = (requestLine != null) ? parseParam(requestLine) : null; 
                 if (request != null) {
-                    String responseBody = runAction(request);
-                    if (responseBody != null) {
-                        writer.write("HTTP/1.1 200 OK\r\n" +
+                    ActionResult result = runAction(request);
+                    if (result != null) {
+                        writer.write("HTTP/1.1 " + result.code + " OK\r\n" +
                         		"Connection: close\r\n" +
                         		"Content-Type: text/html; charset=UTF-8\r\n" +
                         		"\r\n");
-                        writer.write(responseBody);
+                        writer.write(result.body);
                     } else {
                         writer.write("HTTP/1.1 404 Not found\r\n" +
                                 "Connection: close\r\n" +
@@ -126,7 +135,7 @@ public class HttpServer {
         actionMap.put("/"+action.getActionNames(), action);
     }
     
-    String runAction(Request request) {
+    ActionResult runAction(Request request) {
         IAction action = actionMap.get(request.path);
         if (action == null) {
             return null;

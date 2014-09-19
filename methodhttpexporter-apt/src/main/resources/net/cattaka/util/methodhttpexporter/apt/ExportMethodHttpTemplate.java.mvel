@@ -36,7 +36,7 @@ $code{count=0}$foreach{argInfo:methodInfo.argInfos}
                             } catch (NumberFormatException e) {
                                 // ignore
                             }
-                            this.notify();
+                            ((Object)this).notify();
                         }
                     }
                 }
@@ -44,7 +44,7 @@ $code{count=0}$foreach{argInfo:methodInfo.argInfos}
                 synchronized (runnable) {
                     sHandler.post(runnable);
                     try {
-                        runnable.wait();
+                        ((Object)runnable).wait();
                     } catch(InterruptedException e) {
                         // ignore
                     }

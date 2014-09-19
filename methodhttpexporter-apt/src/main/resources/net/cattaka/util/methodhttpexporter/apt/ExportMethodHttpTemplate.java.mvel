@@ -5,7 +5,7 @@ import android.os.Handler;
 public class ${className} extends net.cattaka.util.methodhttpexporter.util.HttpServer {
     ${className} me = this;
     ${origClassName} orig;
-    static Handler sHandler = new Handler();
+    static Handler sHandler = new Handler(android.os.Looper.getMainLooper());
     public ${className}(${origClassName} orig) {
         this.orig = orig;
 $foreach{methodInfo:methodInfos}
@@ -13,8 +13,8 @@ $foreach{methodInfo:methodInfos}
             @Override
             public String[] getParamNames() {
                 return new String[] {
-$foreach{argName:methodInfo.argNames}
-                    "${argName}",$end{}
+$foreach{argInfo:methodInfo.argInfos}
+                    "${argInfo.name}",$end{}
                 };
             }
             @Override
@@ -28,10 +28,14 @@ $foreach{argName:methodInfo.argNames}
                     @Override
                     public void run() {
                         synchronized (this) {
-                            result = me.orig.${methodInfo.methodName}(
-$code{count=0}$foreach{argName:methodInfo.argNames}
-                                $if{count>0}, $end{}params[${count++}]$end{}
-                                        );
+                            try {
+                                result = me.orig.${methodInfo.methodName}(
+$code{count=0}$foreach{argInfo:methodInfo.argInfos}
+                                    $if{count>0}, $end{}${argInfo.converter}(params[${count++}])$end{}
+                                            );
+                            } catch (NumberFormatException e) {
+                                // ignore
+                            }
                             this.notify();
                         }
                     }

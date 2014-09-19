@@ -22,19 +22,19 @@ $foreach{argInfo:methodInfo.argInfos}
                 return "${methodInfo.methodName}";
             }
             @Override
-            public String action(final String... params) {
+            public ActionResult action(final String... params) {
                 class RunnableImpl implements Runnable {
-                    volatile String result;
+                    volatile ActionResult result;
                     @Override
                     public void run() {
                         synchronized (this) {
                             try {
-                                result = me.orig.${methodInfo.methodName}(
+                                result = new ActionResult(200, String.valueOf(me.orig.${methodInfo.methodName}(
 $code{count=0}$foreach{argInfo:methodInfo.argInfos}
                                     $if{count>0}, $end{}${argInfo.converter}(params[${count++}])$end{}
-                                            );
+                                            )));
                             } catch (NumberFormatException e) {
-                                // ignore
+                                result = new ActionResult(500, e.getMessage());
                             }
                             ((Object)this).notify();
                         }

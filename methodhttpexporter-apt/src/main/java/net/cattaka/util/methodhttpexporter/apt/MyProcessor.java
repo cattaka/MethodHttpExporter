@@ -222,7 +222,8 @@ public class MyProcessor {
                     argInfo.converter = converterMap.get(argInfo.type);
                     if (argInfo.converter == null) {
                         argInfo.converter = "";
-                        processingEnv.getMessager().printMessage(Kind.ERROR, "Type : " + argInfo.type + " is not supported.");
+                        processingEnv.getMessager().printMessage(Kind.WARNING, "Type : " + argInfo.type + " is not supported. Use @ExportMethodHttpAttr(ignore=true) for this method.");
+                        continue;
                     }
                     argInfos.add(argInfo);
                 }

@@ -40,24 +40,24 @@ public class MyProcessor {
     public static class MethodInfo {
     	public String methodName;
 
-    	public List<String> argNames;
+    	public List<ArgInfo> argInfos;
 
-        public MethodInfo(String methodName, List<String> argNames) {
+        public MethodInfo(String methodName, List<ArgInfo> argInfos) {
             super();
             this.methodName = methodName;
-            this.argNames = argNames;
+            this.argInfos = argInfos;
         }
 
         @Override
         public String toString() {
-            return "MethodInfo [methodName=" + methodName + ", argNames=" + argNames + "]";
+            return "MethodInfo [methodName=" + methodName + ", argInfos=" + argInfos + "]";
         }
 
         @Override
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((argNames == null) ? 0 : argNames.hashCode());
+            result = prime * result + ((argInfos == null) ? 0 : argInfos.hashCode());
             result = prime * result + ((methodName == null) ? 0 : methodName.hashCode());
             return result;
         }
@@ -71,10 +71,10 @@ public class MyProcessor {
             if (getClass() != obj.getClass())
                 return false;
             MethodInfo other = (MethodInfo)obj;
-            if (argNames == null) {
-                if (other.argNames != null)
+            if (argInfos == null) {
+                if (other.argInfos != null)
                     return false;
-            } else if (!argNames.equals(other.argNames))
+            } else if (!argInfos.equals(other.argInfos))
                 return false;
             if (methodName == null) {
                 if (other.methodName != null)
@@ -83,7 +83,50 @@ public class MyProcessor {
                 return false;
             return true;
         }
-
+    }
+    
+    public static class ArgInfo {
+        public String name;
+        public String type;
+        public String converter;
+        public ArgInfo() {
+            super();
+        }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((converter == null) ? 0 : converter.hashCode());
+            result = prime * result + ((name == null) ? 0 : name.hashCode());
+            result = prime * result + ((type == null) ? 0 : type.hashCode());
+            return result;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ArgInfo other = (ArgInfo)obj;
+            if (converter == null) {
+                if (other.converter != null)
+                    return false;
+            } else if (!converter.equals(other.converter))
+                return false;
+            if (name == null) {
+                if (other.name != null)
+                    return false;
+            } else if (!name.equals(other.name))
+                return false;
+            if (type == null) {
+                if (other.type != null)
+                    return false;
+            } else if (!type.equals(other.type))
+                return false;
+            return true;
+        }
         
     }
 
@@ -150,10 +193,20 @@ public class MyProcessor {
         }
     }
 
-    public static List<MethodInfo> pullMethodInfos(TypeElement rootElement) {
+    public List<MethodInfo> pullMethodInfos(TypeElement rootElement) {
         List<MethodInfo> methodInfos = new ArrayList<MethodInfo>();
         List<TypeElement> interfaces = pullInterfaces(rootElement);
         Set<MethodInfo> existMethodInfos = new HashSet<MethodInfo>();
+        
+        Map<String, String> converterMap = new HashMap<String, String>();
+        converterMap.put("java.lang.String", "");
+        converterMap.put("java.lang.Character", "Character.valueOf");
+        converterMap.put("java.lang.Short", "Short.valueOf");
+        converterMap.put("java.lang.Integer", "Integer.valueOf");
+        converterMap.put("java.lang.Long", "Long.valueOf");
+        converterMap.put("java.lang.Float", "Float.valueOf");
+        converterMap.put("java.lang.Double", "Double.valueOf");
+        
         for (TypeElement element : interfaces) {
             for (ExecutableElement method : ElementFilter.methodsIn(element.getEnclosedElements())) {
                 ExportMethodHttpAttr attr = method.getAnnotation(ExportMethodHttpAttr.class);
@@ -161,13 +214,21 @@ public class MyProcessor {
                     continue;
                 }
 
-                List<String> argNames = new ArrayList<String>();
+                List<ArgInfo> argInfos = new ArrayList<ArgInfo>();
                 for (VariableElement arg : method.getParameters()) {
-                    argNames.add(String.valueOf(arg.getSimpleName()));
+                    ArgInfo argInfo = new ArgInfo();
+                    argInfo.name = String.valueOf(arg.getSimpleName());
+                    argInfo.type = String.valueOf(arg.asType());
+                    argInfo.converter = converterMap.get(argInfo.type);
+                    if (argInfo.converter == null) {
+                        argInfo.converter = "";
+                        processingEnv.getMessager().printMessage(Kind.ERROR, "Type : " + argInfo.type + " is not supported.");
+                    }
+                    argInfos.add(argInfo);
                 }
 
                 String methodName = String.valueOf(method.getSimpleName());
-                MethodInfo methodInfo = new MethodInfo(methodName, argNames);
+                MethodInfo methodInfo = new MethodInfo(methodName, argInfos);
                 if (existMethodInfos.add(methodInfo)) {
                     methodInfos.add(methodInfo);
                 }

@@ -3,7 +3,7 @@
 
 	<groupId>net.cattaka</groupId>
 	<artifactId>methodhttpexporter-parent</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -30,7 +30,7 @@
 		<connection>scm:git:git@github.com:cattaka/MethodHttpExporter.git</connection>
 		<developerConnection>scm:git:git@github.com:cattaka/MethodHttpExporter.git</developerConnection>
 		<url>git@github.com:cattaka/MethodHttpExporter.git</url>
-		<tag>methodhttpexporter-0.3.0</tag>
+		<tag>methodhttpexporter-0.1.0</tag>
 	</scm>
 
 	<developers>

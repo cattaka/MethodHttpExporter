@@ -41,10 +41,12 @@ import net.cattaka.util.methodhttpexporter.annotation.ExportMethodHttp;
 public class SimpleToast {
     private Context mContext;
 
+    @ExportMethodHttpAttr
     public SimpleToast(Context mContext) {
         this.mContext = mContext;
     }
 
+    @ExportMethodHttpAttr
     public String doToast(String text) {
         Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
         return "Succeed";

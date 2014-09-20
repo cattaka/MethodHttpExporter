@@ -18,7 +18,7 @@ $foreach{argInfo:methodInfo.argInfos}
                 };
             }
             @Override
-            public String getActionNames() {
+            public String getActionName() {
                 return "${methodInfo.methodName}";
             }
             @Override

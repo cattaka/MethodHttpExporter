@@ -27,4 +27,22 @@ public class HttpServerTest {
         assertThat(request.params.get("arg1"), is("val1"));
     }
 
+    @Test
+    public void testTerminate() throws Exception {
+        HttpServer sup = new HttpServer();
+        {   // Run and Terminate
+            assertThat(sup.isAlive(), is(false));
+            sup.run(38090);
+            assertThat(sup.isAlive(), is(true));
+            sup.terminate();
+            assertThat(sup.isAlive(), is(false));
+        }
+        {   // Run and Terminate again
+            assertThat(sup.isAlive(), is(false));
+            sup.run(38090);
+            assertThat(sup.isAlive(), is(true));
+            sup.terminate();
+            assertThat(sup.isAlive(), is(false));
+        }
+    }
 }

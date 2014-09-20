@@ -210,7 +210,7 @@ public class MyProcessor {
         for (TypeElement element : interfaces) {
             for (ExecutableElement method : ElementFilter.methodsIn(element.getEnclosedElements())) {
                 ExportMethodHttpAttr attr = method.getAnnotation(ExportMethodHttpAttr.class);
-                if (attr != null && attr.ignore()) {
+                if (attr == null || !attr.enable()) {
                     continue;
                 }
 

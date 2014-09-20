@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class HttpServer {
     public interface IAction {
-        public String getActionNames();
+        public String getActionName();
         public String[] getParamNames();
         public ActionResult action(String... params);
     }
@@ -103,6 +104,14 @@ public class HttpServer {
             clientThreads.remove(this);
         };
     }
+    public HttpServer() {
+        addAction(new IndexHtmlAction() {
+            @Override
+            public Collection<IAction> getActions() {
+                return actionMap.values();
+            }
+        });
+    }
     public static class Request {
         public String path;
         public Map<String, String> params;
@@ -118,8 +127,9 @@ public class HttpServer {
         
     }
     
+    AcceptThread acceptThread;
     List<ClientThread> clientThreads = Collections.synchronizedList(new ArrayList<HttpServer.ClientThread>());
-    Map<String, IAction> actionMap = new HashMap<String, HttpServer.IAction>();
+    Map<String, IAction> actionMap = Collections.synchronizedMap(new HashMap<String, HttpServer.IAction>());
 
     public static void main(String[] args) throws IOException {
         HttpServer httpServer = new HttpServer();
@@ -127,12 +137,12 @@ public class HttpServer {
     }
     public void run(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-        AcceptThread acceptThread = new AcceptThread(serverSocket);
+        acceptThread = new AcceptThread(serverSocket);
         acceptThread.start();
     }
     
     public void addAction(IAction action) {
-        actionMap.put("/"+action.getActionNames(), action);
+        actionMap.put("/"+action.getActionName(), action);
     }
     
     ActionResult runAction(Request request) {
@@ -172,5 +182,17 @@ public class HttpServer {
         }
         
         return new Request(path, params);
+    }
+    
+    public boolean isAlive() {
+        return (acceptThread != null && acceptThread.isAlive());
+    }
+    
+    public void terminate() throws InterruptedException {
+        if (isAlive()) {
+            acceptThread.requestStop();
+            acceptThread.join();
+            acceptThread = null;
+        }
     }
 }

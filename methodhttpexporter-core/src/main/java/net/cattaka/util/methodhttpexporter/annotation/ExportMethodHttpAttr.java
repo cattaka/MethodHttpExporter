@@ -1,5 +1,5 @@
 package net.cattaka.util.methodhttpexporter.annotation;
 
 public @interface ExportMethodHttpAttr {
-    public boolean ignore();
+    public boolean enable() default true;
 }

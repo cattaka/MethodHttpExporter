@@ -39,12 +39,14 @@ import net.cattaka.util.methodhttpexporter.apt.util.ResourceUtil;
 public class MyProcessor {
     public static class MethodInfo {
     	public String methodName;
+    	public String returnType;
 
     	public List<ArgInfo> argInfos;
 
-        public MethodInfo(String methodName, List<ArgInfo> argInfos) {
+        public MethodInfo(String methodName, String returnType, List<ArgInfo> argInfos) {
             super();
             this.methodName = methodName;
+            this.returnType = returnType;
             this.argInfos = argInfos;
         }
 
@@ -206,6 +208,12 @@ public class MyProcessor {
         converterMap.put("java.lang.Long", "Long.valueOf");
         converterMap.put("java.lang.Float", "Float.valueOf");
         converterMap.put("java.lang.Double", "Double.valueOf");
+        converterMap.put("char", "Character.valueOf");
+        converterMap.put("short", "Short.valueOf");
+        converterMap.put("int", "Integer.valueOf");
+        converterMap.put("long", "Long.valueOf");
+        converterMap.put("float", "Float.valueOf");
+        converterMap.put("double", "Double.valueOf");
         
         for (TypeElement element : interfaces) {
             for (ExecutableElement method : ElementFilter.methodsIn(element.getEnclosedElements())) {
@@ -213,6 +221,8 @@ public class MyProcessor {
                 if (attr == null || !attr.enable()) {
                     continue;
                 }
+                
+                String returnType = String.valueOf(method.getReturnType());
 
                 List<ArgInfo> argInfos = new ArrayList<ArgInfo>();
                 for (VariableElement arg : method.getParameters()) {
@@ -229,7 +239,7 @@ public class MyProcessor {
                 }
 
                 String methodName = String.valueOf(method.getSimpleName());
-                MethodInfo methodInfo = new MethodInfo(methodName, argInfos);
+                MethodInfo methodInfo = new MethodInfo(methodName, returnType, argInfos);
                 if (existMethodInfos.add(methodInfo)) {
                     methodInfos.add(methodInfo);
                 }

@@ -29,10 +29,18 @@ $foreach{argInfo:methodInfo.argInfos}
                     public void run() {
                         synchronized (this) {
                             try {
+$if{methodInfo.returnType=="void"}
+                                me.orig.${methodInfo.methodName}(
+$code{count=0}$foreach{argInfo:methodInfo.argInfos}
+                                    $if{count>0}, $end{}${argInfo.converter}(params[${count++}])$end{}
+                                            );
+                                result = new ActionResult(200, "void"); 
+$else{}
                                 result = new ActionResult(200, String.valueOf(me.orig.${methodInfo.methodName}(
 $code{count=0}$foreach{argInfo:methodInfo.argInfos}
                                     $if{count>0}, $end{}${argInfo.converter}(params[${count++}])$end{}
                                             )));
+$end{}
                             } catch (NumberFormatException e) {
                                 result = new ActionResult(500, e.getMessage());
                             }

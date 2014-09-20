@@ -118,6 +118,7 @@ public class HttpServer {
         
     }
     
+    AcceptThread acceptThread;
     List<ClientThread> clientThreads = Collections.synchronizedList(new ArrayList<HttpServer.ClientThread>());
     Map<String, IAction> actionMap = new HashMap<String, HttpServer.IAction>();
 
@@ -127,7 +128,7 @@ public class HttpServer {
     }
     public void run(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-        AcceptThread acceptThread = new AcceptThread(serverSocket);
+        acceptThread = new AcceptThread(serverSocket);
         acceptThread.start();
     }
     
@@ -172,5 +173,17 @@ public class HttpServer {
         }
         
         return new Request(path, params);
+    }
+    
+    public boolean isAlive() {
+        return (acceptThread != null && acceptThread.isAlive());
+    }
+    
+    public void terminate() throws InterruptedException {
+        if (isAlive()) {
+            acceptThread.requestStop();
+            acceptThread.join();
+            acceptThread = null;
+        }
     }
 }

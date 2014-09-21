@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>net.cattaka</groupId>
 		<artifactId>methodhttpexporter-parent</artifactId>
-		<version>0.4.2-SNAPSHOT</version>
+		<version>0.4.2</version>
 		<relativePath>../methodhttpexporter-parent</relativePath>
 	</parent>
 
@@ -102,6 +102,6 @@
 	</dependencies>
 
   <scm>
-    <tag>methodhttpexporter-0.1.2</tag>
+    <tag>methodhttpexporter-0.4.2</tag>
   </scm>
 </project>

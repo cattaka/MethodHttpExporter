@@ -41,6 +41,9 @@ $code{count=0}$foreach{argInfo:methodInfo.argInfos}
                                     $if{count>0}, $end{}${argInfo.converter}(params[${count++}])$end{}
                                             )));
 $end{}
+                            } catch (NumberFormatException e) {
+                                result = new ActionResult(500, e.getMessage());
+                            }
                             ((Object)this).notify();
                         }
                     }

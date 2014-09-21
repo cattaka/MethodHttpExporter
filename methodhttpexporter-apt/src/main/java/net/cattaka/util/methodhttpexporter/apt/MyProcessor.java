@@ -38,10 +38,10 @@ import net.cattaka.util.methodhttpexporter.apt.util.ResourceUtil;
 @SupportedAnnotationTypes("net.cattaka.util.genasyncif.*")
 public class MyProcessor {
     public static class MethodInfo {
-    	public String methodName;
-    	public String returnType;
+        public String methodName;
+        public String returnType;
 
-    	public List<ArgInfo> argInfos;
+        public List<ArgInfo> argInfos;
 
         public MethodInfo(String methodName, String returnType, List<ArgInfo> argInfos) {
             super();

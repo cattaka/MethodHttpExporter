@@ -17,7 +17,6 @@ public class SimpleMethods {
         return String.valueOf(arg1.doubleValue()+arg2.doubleValue());
     }
     @ExportMethodHttpAttr
-    public void method(int a1, int a2) {
-        
+    public void myMethod4(Integer arg1, Double arg2) {
     }
 }

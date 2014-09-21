@@ -77,8 +77,9 @@ public class MyApplication extends Application {
 ```
 
 That's all for editng code.
-Try to access "http://localhost:8090/doToast?text=helloFromBrowser"
-You will see Toast that has "helloFromBrowser" message.
+Try to access "http://localhost:8090/", you will see list of methods and forms.
+And access "http://localhost:8090/doToast?text=helloFromBrowser",
+you will see Toast that has "helloFromBrowser" message.
 
 ## License
 ```

@@ -38,13 +38,15 @@ import net.cattaka.util.methodhttpexporter.apt.util.ResourceUtil;
 @SupportedAnnotationTypes("net.cattaka.util.genasyncif.*")
 public class MyProcessor {
     public static class MethodInfo {
-    	public String methodName;
+        public String methodName;
+        public String returnType;
 
-    	public List<ArgInfo> argInfos;
+        public List<ArgInfo> argInfos;
 
-        public MethodInfo(String methodName, List<ArgInfo> argInfos) {
+        public MethodInfo(String methodName, String returnType, List<ArgInfo> argInfos) {
             super();
             this.methodName = methodName;
+            this.returnType = returnType;
             this.argInfos = argInfos;
         }
 
@@ -213,6 +215,8 @@ public class MyProcessor {
                 if (attr == null || !attr.enable()) {
                     continue;
                 }
+                
+                String returnType = String.valueOf(method.getReturnType());
 
                 List<ArgInfo> argInfos = new ArrayList<ArgInfo>();
                 for (VariableElement arg : method.getParameters()) {
@@ -229,7 +233,7 @@ public class MyProcessor {
                 }
 
                 String methodName = String.valueOf(method.getSimpleName());
-                MethodInfo methodInfo = new MethodInfo(methodName, argInfos);
+                MethodInfo methodInfo = new MethodInfo(methodName, returnType, argInfos);
                 if (existMethodInfos.add(methodInfo)) {
                     methodInfos.add(methodInfo);
                 }

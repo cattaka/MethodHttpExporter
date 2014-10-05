@@ -202,18 +202,22 @@ public class MyProcessor {
         
         Map<String, String> converterMap = new HashMap<String, String>();
         converterMap.put("java.lang.String", "");
-        converterMap.put("java.lang.Character", "Character.valueOf");
-        converterMap.put("java.lang.Short", "Short.valueOf");
-        converterMap.put("java.lang.Integer", "Integer.valueOf");
-        converterMap.put("java.lang.Long", "Long.valueOf");
-        converterMap.put("java.lang.Float", "Float.valueOf");
-        converterMap.put("java.lang.Double", "Double.valueOf");
-        converterMap.put("char", "Character.valueOf");
-        converterMap.put("short", "Short.valueOf");
-        converterMap.put("int", "Integer.valueOf");
-        converterMap.put("long", "Long.valueOf");
-        converterMap.put("float", "Float.valueOf");
-        converterMap.put("double", "Double.valueOf");
+        converterMap.put("java.lang.Boolean", "net.cattaka.util.methodhttpexporter.util.Converter.valueBooleanOf");
+        converterMap.put("java.lang.Byte", "net.cattaka.util.methodhttpexporter.util.Converter.valueByteOf");
+        converterMap.put("java.lang.Character", "net.cattaka.util.methodhttpexporter.util.Converter.valueCharacterOf");
+        converterMap.put("java.lang.Short", "net.cattaka.util.methodhttpexporter.util.Converter.valueShortOf");
+        converterMap.put("java.lang.Integer", "net.cattaka.util.methodhttpexporter.util.Converter.valueIntegerOf");
+        converterMap.put("java.lang.Long", "net.cattaka.util.methodhttpexporter.util.Converter.valueLongOf");
+        converterMap.put("java.lang.Float", "net.cattaka.util.methodhttpexporter.util.Converter.valueFloatOf");
+        converterMap.put("java.lang.Double", "net.cattaka.util.methodhttpexporter.util.Converter.valueDoubleOf");
+        converterMap.put("boolean", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimBooleanOf");
+        converterMap.put("byte", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimByteOf");
+        converterMap.put("char", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimCharacterOf");
+        converterMap.put("short", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimShortOf");
+        converterMap.put("int", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimIntegerOf");
+        converterMap.put("long", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimLongOf");
+        converterMap.put("float", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimFloatOf");
+        converterMap.put("double", "net.cattaka.util.methodhttpexporter.util.Converter.valuePrimDoubleOf");
         
         for (TypeElement element : interfaces) {
             for (ExecutableElement method : ElementFilter.methodsIn(element.getEnclosedElements())) {

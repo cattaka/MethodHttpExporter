@@ -1,6 +1,9 @@
 
 package net.cattaka.util.methodhttpexporter.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 public class Converter {
     public static class ConverterException extends RuntimeException {
         private static final long serialVersionUID = 1L;
@@ -11,6 +14,17 @@ public class Converter {
 
         public ConverterException(Throwable cause) {
             super(cause);
+        }
+    }
+
+    public static String valueStringOf(String str) throws ConverterException {
+        if (str == null) {
+            return null;
+        }
+        try {
+            return URLDecoder.decode(str, "UTF8");
+        } catch (UnsupportedEncodingException e) {
+            throw new ConverterException(e.getMessage());
         }
     }
 

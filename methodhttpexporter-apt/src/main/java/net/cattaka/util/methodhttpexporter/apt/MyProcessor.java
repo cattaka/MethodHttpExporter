@@ -201,7 +201,7 @@ public class MyProcessor {
         Set<MethodInfo> existMethodInfos = new HashSet<MethodInfo>();
         
         Map<String, String> converterMap = new HashMap<String, String>();
-        converterMap.put("java.lang.String", "");
+        converterMap.put("java.lang.String", "net.cattaka.util.methodhttpexporter.util.Converter.valueStringOf");
         converterMap.put("java.lang.Boolean", "net.cattaka.util.methodhttpexporter.util.Converter.valueBooleanOf");
         converterMap.put("java.lang.Byte", "net.cattaka.util.methodhttpexporter.util.Converter.valueByteOf");
         converterMap.put("java.lang.Character", "net.cattaka.util.methodhttpexporter.util.Converter.valueCharacterOf");
